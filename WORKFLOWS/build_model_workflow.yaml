@@ -1,0 +1,33 @@
+resources:
+  jobs:
+    Build_movies_model:
+      name: Build_movies_model
+      tasks:
+        - task_key: Preprocessing
+          notebook_task:
+            notebook_path: /Workspace/Shared/MOVIES/CODE/01_preprocessing
+            source: WORKSPACE
+          existing_cluster_id: 0514-120638-9v07bamz
+        - task_key: Test_dataset
+          depends_on:
+            - task_key: Preprocessing
+          notebook_task:
+            notebook_path: /Workspace/Shared/MOVIES/CODE/TESTS/01_test_input
+            source: WORKSPACE
+          existing_cluster_id: 0514-120638-9v07bamz
+        - task_key: register_model
+          depends_on:
+            - task_key: Test_dataset
+          notebook_task:
+            notebook_path: /Workspace/Shared/MOVIES/CODE/03_register_model
+            source: WORKSPACE
+          existing_cluster_id: 0514-120638-9v07bamz
+        - task_key: test_model
+          depends_on:
+            - task_key: register_model
+          notebook_task:
+            notebook_path: /Workspace/Shared/MOVIES/CODE/TESTS/02_test_model
+            source: WORKSPACE
+          existing_cluster_id: 0514-120638-9v07bamz
+      queue:
+        enabled: true
